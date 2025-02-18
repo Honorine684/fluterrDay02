@@ -78,9 +78,9 @@ class _SnakeNavigationBarExampleScreenState
      final largeurEcran = MediaQuery.of(context).size.width;
     final hauteurEcran = MediaQuery.of(context).size.height;
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      //extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: true,
-      extendBody: true,
+       extendBody: true,
             appBar: AppBar(
         title: AnimatedCrossFade(
             firstChild: Row(

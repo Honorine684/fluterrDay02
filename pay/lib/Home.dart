@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pay/SendMoney.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,48 +11,64 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-
   @override
   Widget build(BuildContext context) {
     final largeurEcran = MediaQuery.of(context).size.width;
     final hauteurEcran = MediaQuery.of(context).size.height;
     return Scaffold(
- 
+      
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: largeurEcran*0.05),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(height: hauteurEcran*0.02,),
             Padding(padding: EdgeInsets.only(right: 10,left: 10),
             child: 
             
             Container(
              // margin: EdgeInsets.only(right: 10,left: 10),
-              width: largeurEcran*0.9,
-              height: hauteurEcran*0.22,
+              width: largeurEcran*0.95,
+              height: hauteurEcran*0.20,
+          
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: Colors.blue
+                color: Colors.blue,
+                boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),//rend l'ombre semi transparente
+                      spreadRadius: 3,//expansion de l'omnbre
+                      blurRadius: 5,//controle le flou de l'ombre
+                      offset: Offset(0, 3),//decale l'ombre de 3pixels
+                    )
+                  ],
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("blablablabla",style: TextStyle(fontSize: largeurEcran*0.037,color: Colors.white),),
-                      Text("blablablabla",style: TextStyle(fontSize: largeurEcran*0.037,color: Colors.white),)
+                      SizedBox(
+                  width: 10,
+                 height: 10,
+                ),
+                      Text("sacof account",style: TextStyle(fontSize: largeurEcran*0.037,color: Colors.white),),
+                      SizedBox(height: 10,width: 109,),
+                      Text("sacof account",style: TextStyle(fontSize: largeurEcran*0.037,color: Colors.white),)
                     ],
                   ),
                  
 
                   Text("630.21",style: TextStyle(fontSize: largeurEcran*0.1,fontWeight: FontWeight.bold,color: Colors.white),),
-                  Text("blablabla",style: TextStyle(fontSize: largeurEcran*0.035,color: Colors.white),),
+                  Text("Total balance",style: TextStyle(fontSize: largeurEcran*0.035,color: Colors.white),),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   
                     children: [
-                      Text("blablabla",style: TextStyle(fontSize: largeurEcran*0.035,color: Colors.white),),
-                      Text("blablabla",style: TextStyle(fontSize: largeurEcran*0.035,color: Colors.white),)
+                      SizedBox(height: 10,width: 10,),
+                      Text("sacof account",style: TextStyle(fontSize: largeurEcran*0.035,color: Colors.white),),
+                      SizedBox(height: 10,width: 130,),
+                      Text("Ac1235",style: TextStyle(fontSize: largeurEcran*0.035,color: Colors.white),)
                     ],
                   )
 
@@ -60,8 +77,80 @@ class HomeState extends State<Home> {
             ),
           
         ),
+        SizedBox(height: hauteurEcran*0.01,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Features",style: TextStyle(fontSize: largeurEcran*0.045,fontWeight: FontWeight.bold),),
+            Text("See more",style: TextStyle(fontSize: largeurEcran*0.035,color: Colors.blue,fontWeight: FontWeight.bold),)
+
+          ],
+        ),
         SizedBox(height: hauteurEcran*0.02,),
-        Text("Features",style: TextStyle(fontSize: largeurEcran*0.045,fontWeight: FontWeight.bold),),
+        Row(
+          children: [
+          Container(
+            margin: EdgeInsets.all(6),
+            width: largeurEcran*0.25,
+            height: 45,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.grey.withOpacity(0.2),
+            ),
+            child: TextButton.icon(
+              label: Text("Send",style: TextStyle(fontSize: largeurEcran*0.03,color: Colors.black),),
+              icon: Icon(Icons.send,color: Colors.black,),
+              onPressed: () => setState(() {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> const Sendmoney()));
+              }),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(5),
+            width: largeurEcran*0.28,
+            height: 45,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.grey.withOpacity(0.2),
+            ),
+            child: TextButton.icon(
+              label: Text("Receive",style: TextStyle(fontSize: largeurEcran*0.03,color: Colors.black),),
+              icon: Icon(Icons.send,color: Colors.black,),
+              onPressed: () => setState(() {
+                //Navigator.push(context, MaterialPageRoute(builder: (context)=> const Login()));
+              }),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(5),
+            width: largeurEcran*0.28,
+            height: 45,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.grey.withOpacity(0.2),
+            ),
+            child: TextButton.icon(
+              label: Text("Rewards",style: TextStyle(fontSize: largeurEcran*0.03,color: Colors.black),),
+              icon: Icon(Icons.send,color: Colors.black,),
+              onPressed: () => setState(() {
+               // Navigator.push(context, MaterialPageRoute(builder: (context)=> const Login()));
+              }),
+            ),
+          )
+          ],
+        ),
+        SizedBox(height: hauteurEcran*0.01,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Recently activity",style: TextStyle(fontSize: largeurEcran*0.045,fontWeight: FontWeight.bold),),
+          
+            //dropdown
+            
+
+          ],
+        )
+        
 
         ],
         ),
