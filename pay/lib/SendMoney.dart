@@ -31,6 +31,7 @@ class SendmoneyState extends State<Sendmoney> {
   Widget build(BuildContext context) {
     final largeurEcran = MediaQuery.of(context).size.width;
     final hauteurEcran = MediaQuery.of(context).size.height;
+    bool? isChecked = false;
     return Scaffold(
       //extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -184,8 +185,8 @@ class SendmoneyState extends State<Sendmoney> {
                 Row(
                   children: [
                     Container(
-                      height: 65,
-                      width: 65,
+                      height: 55,
+                      width: 55,
                       margin: EdgeInsets.only(right: 10),
                       decoration: BoxDecoration(
                          // borderRadius: BorderRadius.circular(10),
@@ -204,13 +205,37 @@ class SendmoneyState extends State<Sendmoney> {
                 Text("Amount",style: TextStyle(fontSize: largeurEcran*0.06,fontWeight: FontWeight.bold),)
               ],
             ),
+            SizedBox(height: hauteurEcran*0.02,),
             // mont cart
 
+            Container(
+              height: hauteurEcran*0.28,
+              width: largeurEcran*0.85,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5)
+              ),
+              child: Column(
+                children: [
+                  Text("\$35",style: TextStyle(fontSize: largeurEcran*0.095),),
+                ],
+              )
+            ),
+            SizedBox(height: hauteurEcran*0.1,),
             Row(
               children: [
-                /*Checkbox(
-                  value: value, 
-                  onChanged: onChanged);*/
+
+                //Checkbox
+                Checkbox(
+                  value: isChecked,
+                  activeColor: Colors.blue,
+                  tristate: true, 
+                  onChanged: (newBool)=>
+                  setState(() {
+                    //isChecked = true;
+                    isChecked = newBool;
+                  })
+                  ),
                 Text("Agree with ideate's terms and conditions",style: TextStyle(fontSize: 12),)  
               ],
             ),
@@ -227,6 +252,7 @@ class SendmoneyState extends State<Sendmoney> {
                   child: Text("Send money",style: TextStyle(fontSize: largeurEcran*0.055,color: Colors.white),),
                 ),
               ),
+              SizedBox(height: hauteurEcran*0.1,width: largeurEcran*0.1,)
           ],
         ),
       ),
