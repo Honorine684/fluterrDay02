@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:pay/Home.dart';
 import 'package:pay/Login.dart';
-import 'package:pay/Profile.dart';
+import 'package:pay/Wallet.dart';
+import 'package:pay/appbarComponent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -88,10 +89,14 @@ class SnakeNavigationBarExampleScreen extends StatefulWidget {
 
 class _SnakeNavigationBarExampleScreenState
     extends State<SnakeNavigationBarExampleScreen> {
-  /*int appBarIndex = 0;
-  final appBar = [
-    
-  ]; */
+  
+
+  int activeBottom = 0;
+  final pages = [
+    Home(),
+    Wallet(),
+    Wallet()
+  ];
   final BorderRadius _borderRadius = const BorderRadius.only(
     topLeft: Radius.circular(25),
     topRight: Radius.circular(25),
@@ -103,7 +108,7 @@ class _SnakeNavigationBarExampleScreenState
   SnakeBarBehaviour snakeBarStyle = SnakeBarBehaviour.floating;
   EdgeInsets padding = const EdgeInsets.all(12);
 
-  int _selectedItemPosition = 2;
+ int _selectedItemPosition = 2;
   SnakeShape snakeShape = SnakeShape.circle;
 
   bool showSelectedLabels = false;
@@ -125,16 +130,12 @@ class _SnakeNavigationBarExampleScreenState
     const Color(0xFFF4E4CE),
   ];
 
-  bool voirRecherche = false;
-  final searchController = TextEditingController();
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
+    /*final largeurEcran = MediaQuery.of(context).size.width;
+    final hauteurEcran = MediaQuery.of(context).size.height;*/
     //deconnexion
     Future<void> logout() async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -145,76 +146,21 @@ class _SnakeNavigationBarExampleScreenState
       );
     }
 
-    final largeurEcran = MediaQuery.of(context).size.width;
-    final hauteurEcran = MediaQuery.of(context).size.height;
+   
     return Scaffold(
-      //extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: true,
       extendBody: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: AnimatedCrossFade(
-            firstChild: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Image.asset("assets/images/avatar.png",
-                      width: largeurEcran * 0.13, height: hauteurEcran * 0.13),
-                ),
-                SizedBox(
-                  width: 10,
-                  height: 10,
-                ),
-                Text(
-                  "Hello,Sacof!",
-                  style: TextStyle(fontSize: largeurEcran * 0.04),
-                ),
-              ],
-            ),
-            secondChild: TextField(
-              keyboardType: TextInputType.text,
-              cursorColor: Color(0xFF075E54),
-              decoration: InputDecoration(
-                hintText: 'Rechercher...',
-                hintStyle: TextStyle(color: Colors.black),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(80),
-                  borderSide: BorderSide(width: 0, style: BorderStyle.none),
-                ),
-                filled: true,
-                contentPadding: EdgeInsets.all(8),
-              ),
-              controller: searchController,
-            ),
-            crossFadeState: voirRecherche
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 300)),
-        actions: [
-          Container(
-              margin: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.lightBlue.shade100),
-              width: largeurEcran * 0.25,
-              height: hauteurEcran * 0.25,
-              child: IconButton(
-                  onPressed: () => setState(() {
-                        voirRecherche = !voirRecherche;
-                        if (!voirRecherche) {
-                          searchController.clear();
-                        }
-                      }),
-                  icon: Icon(voirRecherche ? Icons.close : Icons.search)))
-        ],
-      ),
-      body: AnimatedContainer(
+     
+      body:pages[activeBottom],
+      /*AnimatedContainer(
         color: containerColor ?? containerColors[0],
         duration: const Duration(seconds: 1),
         child: PageView(
           onPageChanged: _onPageChanged,
           children: <Widget>[
             Home(),
-            Profile(),
+            Wallet(),
             /*PagerPageWidget(
               text: 'It comes in all shapes and sizes...',
               description:
@@ -235,9 +181,8 @@ class _SnakeNavigationBarExampleScreenState
             ),*/
           ],
         ),
-      ),
+      ),*/
       bottomNavigationBar: SnakeNavigationBar.color(
-        // height: 80,
         behaviour: snakeBarStyle,
         snakeShape: snakeShape,
         shape: bottomBarShape,
@@ -259,20 +204,22 @@ class _SnakeNavigationBarExampleScreenState
 
         currentIndex: _selectedItemPosition,
         onTap: (index) {
-          if (index == 4) {
+          if (index == 3) {
             // Index de l'icône de déconnexion
             logout();
           } else {
-            setState(() => _selectedItemPosition = index);
+            setState(() => activeBottom = index);
           }
+
+          /*if(index==1){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> const Wallet()));
+          }*/
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month), label: 'calendar'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person_off_outlined), label: 'microphone'),
+              icon: Icon(Icons.wallet), label: 'Wallet'),
+          BottomNavigationBarItem(icon: Icon(Icons.gif_outlined), label: 'Cadeau'),
           BottomNavigationBarItem(
               icon: Icon(Icons.logout_sharp), label: 'deconnexion')
         ],
@@ -282,9 +229,9 @@ class _SnakeNavigationBarExampleScreenState
     );
   }
 
-  void _onPageChanged(int page) {
-    containerColor = containerColors[page];
-    switch (page) {
+ void _onPageChanged(int activeBottom) {
+    containerColor = containerColors[activeBottom];
+    switch (activeBottom) {
       case 0:
         setState(() {
           snakeBarStyle = SnakeBarBehaviour.floating;
@@ -403,3 +350,4 @@ class PagerPageWidget extends StatelessWidget {
     );
   }
 }
+
