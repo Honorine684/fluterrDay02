@@ -6,7 +6,7 @@ class Users {
     final String? username;
     final String email;
     final String userPassword;
-    final int? solde = 1000;
+    final double? solde;
     
    // Users({this.username = "", required this.email, required this.userPassword});
     Users({
@@ -14,6 +14,7 @@ class Users {
         this.username = "",
         required this.email,
         required this.userPassword,
+        this.solde = 1000,
         
     });
 
@@ -22,6 +23,7 @@ class Users {
         username: json["username"],
         email: json["email"],
         userPassword: json["userPassword"],
+        solde: json["solde"]
 
     );
 

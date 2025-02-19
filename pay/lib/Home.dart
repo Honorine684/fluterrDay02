@@ -73,7 +73,9 @@ final List<Map<String,String>> activity = [
 ];
 
 class HomeState extends State<Home> {
-  Future<Users?> getLoggedInUserData() async {
+
+  Users? userData ;
+  Future<Users?> getInfoUserConnecter() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final int? userId = prefs.getInt('userId');
   
@@ -84,7 +86,12 @@ class HomeState extends State<Home> {
   
   return null;
 }
-  String dropdownvalue = 'All'; 
+Future<void> chargerInfoUser() async {
+  final user = await  getInfoUserConnecter();
+    setState(() {
+      userData = user;});
+}
+String dropdownvalue = 'All'; 
   var items = [   
     'All', 
     'Receive',
@@ -134,7 +141,7 @@ class HomeState extends State<Home> {
                           height: 10,
                         ),
                         Text(
-                          "sacof account",
+                          userData?.username ??"account",
                           style: TextStyle(
                               fontSize: largeurEcran * 0.037,
                               color: Colors.white),
@@ -144,7 +151,7 @@ class HomeState extends State<Home> {
                           width: 109,
                         ),
                         Text(
-                          "sacof account",
+                          userData?.username ??"account",
                           style: TextStyle(
                               fontSize: largeurEcran * 0.037,
                               color: Colors.white),
@@ -152,7 +159,7 @@ class HomeState extends State<Home> {
                       ],
                     ),
                     Text(
-                      "630.21",
+                      "${userData?.solde ?? '0.00'}",
                       style: TextStyle(
                           fontSize: largeurEcran * 0.1,
                           fontWeight: FontWeight.bold,
@@ -170,7 +177,7 @@ class HomeState extends State<Home> {
                           width: 10,
                         ),
                         Text(
-                          "sacof account",
+                          userData?.username ?? "account",
                           style: TextStyle(
                               fontSize: largeurEcran * 0.035,
                               color: Colors.white),
@@ -179,8 +186,8 @@ class HomeState extends State<Home> {
                           height: 10,
                           width: 130,
                         ),
-                        Text(
-                          "Ac1235",
+                        Text( "Acn124587"
+                           ,
                           style: TextStyle(
                               fontSize: largeurEcran * 0.035,
                               color: Colors.white),
@@ -305,25 +312,22 @@ class HomeState extends State<Home> {
                 ),
 
                 //dropdown
-      /*Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DropdownButton(
+      
+            DropdownButton<String>(
               
               // Initial Value
               value: dropdownvalue,
+              hint: const Text("Filter By"),
+              
               
               // Down Arrow Icon
               icon: const Icon(Icons.keyboard_arrow_down),    
               
               // Array list of items
-              items: items.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
+              items: const [
+                DropdownMenuItem(value: 'All',child: Text('All'),),
+                DropdownMenuItem(value: "Recent",child: Text("Recent"),)
+              ],
               // After selecting the desired option,it will
               // change button value to selected value
               onChanged: (String? newValue) { 
@@ -333,9 +337,9 @@ class HomeState extends State<Home> {
               },
             ),
           ],),
-            )]*/
+            
 
-          ]),
+          
             SizedBox(height: largeurEcran * 0.02),
             SizedBox(
               height: hauteurEcran*0.4,
