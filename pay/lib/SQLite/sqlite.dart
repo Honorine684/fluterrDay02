@@ -2,6 +2,8 @@
 import 'package:path/path.dart';
 import 'package:pay/JsonModels/User.dart';
 
+
+
 import 'package:sqflite/sqflite.dart';
 
 class PayDb {
@@ -24,16 +26,14 @@ class PayDb {
     return await db.insert("Users", user.toMap(),conflictAlgorithm: ConflictAlgorithm.replace,);
   }
   // methode de connexion
-  Future<bool> login(Users user) async{
+  Future<Map<String, dynamic>?> login(Users user) async{
     final Database db = await _database();
     var result = await db.rawQuery(
       "SELECT* FROM Users WHERE email = '${user.email}' AND userPassword = '${user.userPassword}'"
     );
-    if(result.isNotEmpty){
-      return true;
-    }else{
-      return false;
-    }
+    print(result.first);
+    return result.firstOrNull;
+  
   }
 
   Future<List<Users>> user() async {
@@ -51,6 +51,27 @@ class PayDb {
         Users(userId: userId, username: username,email: email,userPassword: userPassword),
     ];
   }
+
+  // recuperer l'user coonecter
+  
+
+  Future<Users?> getUserConnected(userId) async{
+    final Database  db =  await _database();
+    var result = await db.query("Users",
+      where: 'userId = ?',
+    whereArgs: [userId]);
+
+    if(result.isNotEmpty){
+      return Users.fromMap(result.first);
+    }
+    return null;
+    
+    
+  }
+
+
+
+
 }
 
 

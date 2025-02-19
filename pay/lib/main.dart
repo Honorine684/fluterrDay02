@@ -2,21 +2,80 @@ import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:pay/Home.dart';
 import 'package:pay/Login.dart';
-void main() => runApp(MaterialApp(
-  home: Login(),
-));
+import 'package:pay/Profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/*class ExampleApp extends StatelessWidget {
-  const ExampleApp({Key? key}) : super(key: key);
+void main() async {
+  runApp(MaterialApp(
+    home: GetStarted(),
+  ));
+}
+
+class GetStarted extends StatelessWidget {
+  const GetStarted({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'SnakeNavigationBar Example ',
-      home: SnakeNavigationBarExampleScreen(),
+      home: LoginSreen(),
     );
   }
-}*/
+}
+
+class LoginSreen extends StatefulWidget {
+  const LoginSreen({super.key});
+
+  @override
+  State<LoginSreen> createState() {
+    return LoginSreenState();
+  }
+}
+
+class LoginSreenState extends State<LoginSreen> {
+  bool estCharger = true;
+  @override
+  void initState() {
+    // pour verifier automatiquement au demarrage que l'user est connecter
+    _isUserLogged();
+    super.initState();
+  }
+
+  Future<void> _isUserLogged() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? userId = prefs.getInt('userId');
+
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    if (userId != null) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const SnakeNavigationBarExampleScreen()));
+    } else {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const Login()));
+    }
+    if (mounted) {
+      setState(() {
+        estCharger = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child:
+            estCharger ? const CircularProgressIndicator() : const SizedBox(),
+      ),
+    );
+  }
+}
+
+/*mounted verifie que le widget existe avant de mettre a jour son etat
+  en mode si pendant que ma classe eesaie de verfier la connexion si l'user quitte la page il pourrait y avoir une erreur
+  cette variable m'evite les erreurs au cas ou le chargement de la page ne finit pas et que y aretour
+
+  */
 
 class SnakeNavigationBarExampleScreen extends StatefulWidget {
   const SnakeNavigationBarExampleScreen({super.key});
@@ -32,7 +91,7 @@ class _SnakeNavigationBarExampleScreenState
   /*int appBarIndex = 0;
   final appBar = [
     
-  ]; */ 
+  ]; */
   final BorderRadius _borderRadius = const BorderRadius.only(
     topLeft: Radius.circular(25),
     topRight: Radius.circular(25),
@@ -70,21 +129,32 @@ class _SnakeNavigationBarExampleScreenState
   final searchController = TextEditingController();
   @override
   void dispose() {
-  searchController.dispose();
+    searchController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-     final largeurEcran = MediaQuery.of(context).size.width;
+    //deconnexion
+    Future<void> logout() async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('userId'); // nettoyer l'user
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const Login()),
+        (route) => false, // supprime les routes precedentes
+      );
+    }
+
+    final largeurEcran = MediaQuery.of(context).size.width;
     final hauteurEcran = MediaQuery.of(context).size.height;
     return Scaffold(
       //extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: true,
-       extendBody: true,
-            appBar: AppBar(
+      extendBody: true,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: AnimatedCrossFade(
             firstChild: Row(
-              
               children: [
                 CircleAvatar(
                   backgroundColor: Colors.white,
@@ -122,23 +192,20 @@ class _SnakeNavigationBarExampleScreenState
             duration: Duration(milliseconds: 300)),
         actions: [
           Container(
-            margin: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.lightBlue.shade100
-            ),
-            width: largeurEcran*0.25,
-            height: hauteurEcran*0.25,
-            child: 
-          IconButton(
-            onPressed: () => setState(() {
-              voirRecherche = !voirRecherche;
-              if(!voirRecherche){
-                searchController.clear();
-              }
-            }),   
-         icon: Icon(voirRecherche ? Icons.close :Icons.search)))
-         ],
+              margin: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle, color: Colors.lightBlue.shade100),
+              width: largeurEcran * 0.25,
+              height: hauteurEcran * 0.25,
+              child: IconButton(
+                  onPressed: () => setState(() {
+                        voirRecherche = !voirRecherche;
+                        if (!voirRecherche) {
+                          searchController.clear();
+                        }
+                      }),
+                  icon: Icon(voirRecherche ? Icons.close : Icons.search)))
+        ],
       ),
       body: AnimatedContainer(
         color: containerColor ?? containerColors[0],
@@ -146,7 +213,8 @@ class _SnakeNavigationBarExampleScreenState
         child: PageView(
           onPageChanged: _onPageChanged,
           children: <Widget>[
-            Home()
+            Home(),
+            Profile(),
             /*PagerPageWidget(
               text: 'It comes in all shapes and sizes...',
               description:
@@ -190,17 +258,23 @@ class _SnakeNavigationBarExampleScreenState
         showSelectedLabels: showSelectedLabels,
 
         currentIndex: _selectedItemPosition,
-        onTap: (index) => setState(() => _selectedItemPosition = index),
+        onTap: (index) {
+          if (index == 4) {
+            // Index de l'icône de déconnexion
+            logout();
+          } else {
+            setState(() => _selectedItemPosition = index);
+          }
+        },
         items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month), label: 'calendar'),
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.podcasts), label: 'microphone'),
+              icon: Icon(Icons.person_off_outlined), label: 'microphone'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.search), label: 'search')
+              icon: Icon(Icons.logout_sharp), label: 'deconnexion')
         ],
         selectedLabelStyle: const TextStyle(fontSize: 14),
         unselectedLabelStyle: const TextStyle(fontSize: 10),

@@ -3,6 +3,9 @@ import 'package:pay/JsonModels/User.dart';
 import 'package:pay/SQLite/sqlite.dart';
 import 'package:pay/Signup.dart';
 import 'package:pay/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -15,6 +18,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login>{
+  
   final db = PayDb();
   bool isLogin = false;
   //controller de texte
@@ -27,8 +31,10 @@ class _LoginState extends State<Login>{
   login() async {
     print("Tentative de connexion avec: ${email.text}");
     var response = await db.login(Users(email: email.text, userPassword: passWord.text));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('userId', response?['userId']);
     print("Réponse de la BD: $response");
-    if(response == true){
+    if(response != null){
        print("Connexion réussie, navigation vers Home");
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const SnakeNavigationBarExampleScreen()));
     }else{
