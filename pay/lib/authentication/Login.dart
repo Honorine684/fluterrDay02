@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pay/JsonModels/User.dart';
 import 'package:pay/SQLite/sqlite.dart';
-import 'package:pay/Signup.dart';
+import 'package:pay/authentication/Signup.dart';
 import 'package:pay/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

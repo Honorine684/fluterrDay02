@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pay/JsonModels/User.dart';
 import 'package:pay/SQLite/sqlite.dart';
-import 'package:pay/SendMoney.dart';
+import 'package:pay/Pages/SendMoney.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,87 +13,89 @@ class Home extends StatefulWidget {
   }
 }
 
-final List<Map<String,String>> activity = [
+final List<Map<String, String>> activity = [
   {
-    "image":"assets/images/avatar.png",
-    "texte1":"Miradie",
-    "date1" : "22/04/02",
-    "montant" : "+\$ 6555",
-    "heure":"22h45"
+    "image": "assets/images/avatar.png",
+    "texte1": "Miradie",
+    "date1": "22/04/02",
+    "montant": "+\$ 6555",
+    "heure": "22h45"
   },
   {
-    "image":"assets/images/login.png",
-    "texte1":"Miradie",
-    "date1" : "22/04/02",
-    "montant" : "- \$ 6555",
-    "heure":"22h45"
+    "image": "assets/images/login.png",
+    "texte1": "Miradie",
+    "date1": "22/04/02",
+    "montant": "- \$ 6555",
+    "heure": "22h45"
   },
   {
-    "image":"assets/images/login.png",
-    "texte1":"Miradie",
-    "date1" : "22/04/02",
-    "montant" : "\$ 6555",
-    "heure":"22h45"
+    "image": "assets/images/login.png",
+    "texte1": "Miradie",
+    "date1": "22/04/02",
+    "montant": "\$ 6555",
+    "heure": "22h45"
   },
   {
-    "image":"assets/images/avatar.png",
-    "texte1":"Miradie",
-    "date1" : "22/04/02",
-    "montant" : "+\$ 6555",
-    "heure":"22h45"
+    "image": "assets/images/avatar.png",
+    "texte1": "Miradie",
+    "date1": "22/04/02",
+    "montant": "+\$ 6555",
+    "heure": "22h45"
   },
   {
-    "image":"assets/images/avatar.png",
-    "texte1":"Miradie",
-    "date1" : "22/04/02",
-    "montant" : "+\$ 6555",
-    "heure":"22h45"
+    "image": "assets/images/avatar.png",
+    "texte1": "Miradie",
+    "date1": "22/04/02",
+    "montant": "+\$ 6555",
+    "heure": "22h45"
   },
   {
-    "image":"assets/images/avatar.png",
-    "texte1":"Miradie",
-    "date1" : "22/04/02",
-    "montant" : "+\$ 6555",
-    "heure":"22h45"
+    "image": "assets/images/avatar.png",
+    "texte1": "Miradie",
+    "date1": "22/04/02",
+    "montant": "+\$ 6555",
+    "heure": "22h45"
   },
   {
-    "image":"assets/images/avatar.png",
-    "texte1":"Miradie",
-    "date1" : "22/04/02",
-    "montant" : "+\$ 6555",
-    "heure":"22h45"
+    "image": "assets/images/avatar.png",
+    "texte1": "Miradie",
+    "date1": "22/04/02",
+    "montant": "+\$ 6555",
+    "heure": "22h45"
   },
   {
-    "image":"assets/images/avatar.png",
-    "texte1":"Miradie",
-    "date1" : "22/04/02",
-    "montant" : "+\$ 6555",
-    "heure":"22h45"
+    "image": "assets/images/avatar.png",
+    "texte1": "Miradie",
+    "date1": "22/04/02",
+    "montant": "+\$ 6555",
+    "heure": "22h45"
   },
 ];
 
 class HomeState extends State<Home> {
-
-  Users? userData ;
+  Users? userData;
   Future<Users?> getInfoUserConnecter() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final int? userId = prefs.getInt('userId');
-  
-  if (userId != null) {
-    final db = PayDb();
-    return await db.getUserConnected(userId);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? userId = prefs.getInt('userId');
+
+    if (userId != null) {
+      final db = PayDb();
+      return await db.getUserConnected(userId);
+    }
+
+    return null;
   }
-  
-  return null;
-}
-Future<void> chargerInfoUser() async {
-  final user = await  getInfoUserConnecter();
+
+  Future<void> chargerInfoUser() async {
+    final user = await getInfoUserConnecter();
     setState(() {
-      userData = user;});
-}
-String dropdownvalue = 'All'; 
-  var items = [   
-    'All', 
+      userData = user;
+    });
+  }
+
+  String dropdownvalue = 'All';
+  var items = [
+    'All',
     'Receive',
     'Send',
   ];
@@ -106,102 +107,79 @@ String dropdownvalue = 'All';
     searchController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final largeurEcran = MediaQuery.of(context).size.width;
     final hauteurEcran = MediaQuery.of(context).size.height;
     return Scaffold(
-      //extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: AnimatedCrossFade(
-            firstChild: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Image.asset("assets/images/avatar.png",
-                      width: largeurEcran * 0.13, height: hauteurEcran * 0.13),
-                ),
-                SizedBox(
-                  width: 10,
-                  height: 10,
-                ),
-                Text(
-                  "Hello,Sacof!",
-                  style: TextStyle(fontSize: largeurEcran * 0.04),
-                ),
-              ],
-            ),
-            secondChild: TextField(
-              keyboardType: TextInputType.text,
-              cursorColor: Color(0xFF075E54),
-              decoration: InputDecoration(
-                hintText: 'Rechercher...',
-                hintStyle: TextStyle(color: Colors.black),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(80),
-                  borderSide: BorderSide(width: 0, style: BorderStyle.none),
-                ),
-                filled: true,
-                contentPadding: EdgeInsets.all(8),
-              ),
-              controller: searchController,
-            ),
-            crossFadeState: voirRecherche
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 300)),
-        actions: [
-          Container(
-              margin: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.lightBlue.shade100),
-              width: largeurEcran * 0.25,
-              height: hauteurEcran * 0.25,
-              child: IconButton(
-                  onPressed: () => setState(() {
-                        voirRecherche = !voirRecherche;
-                        if (!voirRecherche) {
-                          searchController.clear();
-                        }
-                      }),
-                  icon: Icon(voirRecherche ? Icons.close : Icons.search)))
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: largeurEcran * 0.05),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-           /* Row(
-              children: [
-                CreditCardUi(
-                  width: 300,
-                  cardHolderFullName: 'John Doe',
-                  cardNumber: '1234567812345678',
-                  validFrom: '01/23',
-                  validThru: '01/28',
-                  topLeftColor: Colors.blue,
-                  doesSupportNfc: true,
-                  placeNfcIconAtTheEnd: true,
-                  cardType: CardType.debit,
-                  cardProviderLogo: FlutterLogo(),
-                  cardProviderLogoPosition: CardProviderLogoPosition.right,
-                  showBalance: true,
-                  balance: 128.32434343,
-                  autoHideBalance: true,
-                  enableFlipping: true,
-                  cvvNumber: '123',
+        //extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: AnimatedCrossFade(
+              firstChild: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Image.asset("assets/images/avatar.png",
+                        width: largeurEcran * 0.13,
+                        height: hauteurEcran * 0.13),
                   ),
-              ],
-            ),*/
+                  SizedBox(
+                    width: 10,
+                    height: 10,
+                  ),
+                  Text(
+                    "Hello,Sacof!",
+                    style: TextStyle(fontSize: largeurEcran * 0.04),
+                  ),
+                ],
+              ),
+              secondChild: TextField(
+                keyboardType: TextInputType.text,
+                cursorColor: Color(0xFF075E54),
+                decoration: InputDecoration(
+                  hintText: 'Rechercher...',
+                  hintStyle: TextStyle(color: Colors.black),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(80),
+                    borderSide: BorderSide(width: 0, style: BorderStyle.none),
+                  ),
+                  filled: true,
+                  contentPadding: EdgeInsets.all(8),
+                ),
+                controller: searchController,
+              ),
+              crossFadeState: voirRecherche
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
+              duration: Duration(milliseconds: 300)),
+          actions: [
+            Container(
+                margin: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.lightBlue.shade100),
+                width: largeurEcran * 0.25,
+                height: hauteurEcran * 0.25,
+                child: IconButton(
+                    onPressed: () => setState(() {
+                          voirRecherche = !voirRecherche;
+                          if (!voirRecherche) {
+                            searchController.clear();
+                          }
+                        }),
+                    icon: Icon(voirRecherche ? Icons.close : Icons.search)))
+          ],
+        ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: largeurEcran * 0.05),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             SizedBox(
               height: hauteurEcran * 0.02,
             ),
             Padding(
               padding: EdgeInsets.only(right: 10, left: 10),
-              child: 
-              Container(
+              child: Container(
                 // margin: EdgeInsets.only(right: 10,left: 10),
                 width: largeurEcran * 0.95,
                 height: hauteurEcran * 0.20,
@@ -230,7 +208,7 @@ String dropdownvalue = 'All';
                           height: 10,
                         ),
                         Text(
-                          userData?.username ??"account",
+                          userData?.username ?? "account",
                           style: TextStyle(
                               fontSize: largeurEcran * 0.037,
                               color: Colors.white),
@@ -240,7 +218,7 @@ String dropdownvalue = 'All';
                           width: 109,
                         ),
                         Text(
-                          userData?.username ??"account",
+                          userData?.username ?? "account",
                           style: TextStyle(
                               fontSize: largeurEcran * 0.037,
                               color: Colors.white),
@@ -275,8 +253,8 @@ String dropdownvalue = 'All';
                           height: 10,
                           width: 130,
                         ),
-                        Text( "Acn124587"
-                           ,
+                        Text(
+                          "Acn124587",
                           style: TextStyle(
                               fontSize: largeurEcran * 0.035,
                               color: Colors.white),
@@ -331,12 +309,14 @@ String dropdownvalue = 'All';
                       Icons.send,
                       color: Colors.black,
                     ),
-                   onPressed: () => setState(() {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const Sendmoney()));
+                    onPressed: () => setState(() {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Sendmoney()));
                     }),
                   ),
                 ),
-         
                 Container(
                   margin: EdgeInsets.all(5),
                   width: largeurEcran * 0.28,
@@ -399,37 +379,39 @@ String dropdownvalue = 'All';
                 ),
 
                 //dropdown
-      
-            DropdownButton<String>(
-              
-              // Initial Value
-              value: dropdownvalue,
-              hint: const Text("Filter By"),
-              
-              
-              // Down Arrow Icon
-              icon: const Icon(Icons.keyboard_arrow_down),    
-              
-              // Array list of items
-              items: const [
-                DropdownMenuItem(value: 'All',child: Text('All'),),
-                DropdownMenuItem(value: "Recent",child: Text("Recent"),)
-              ],
-              // After selecting the desired option,it will
-              // change button value to selected value
-              onChanged: (String? newValue) { 
-                setState(() {
-                  dropdownvalue = newValue!;
-                });
-              },
-            ),
-          ],),
-            
 
-          
+                DropdownButton<String>(
+                  // Initial Value
+                  value: dropdownvalue,
+                  hint: const Text("Filter By"),
+
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.keyboard_arrow_down),
+
+                  // Array list of items
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'All',
+                      child: Text('All'),
+                    ),
+                    DropdownMenuItem(
+                      value: "Recent",
+                      child: Text("Recent"),
+                    )
+                  ],
+                  // After selecting the desired option,it will
+                  // change button value to selected value
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownvalue = newValue!;
+                    });
+                  },
+                ),
+              ],
+            ),
             SizedBox(height: largeurEcran * 0.02),
             SizedBox(
-              height: hauteurEcran*0.4,
+              height: hauteurEcran * 0.4,
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: activity.length,
@@ -441,8 +423,8 @@ String dropdownvalue = 'All';
                       width: 60,
                       margin: EdgeInsets.only(right: 10, bottom: 10),
                       decoration: BoxDecoration(
-                         // borderRadius: BorderRadius.circular(10),
-                         shape: BoxShape.circle,
+                          // borderRadius: BorderRadius.circular(10),
+                          shape: BoxShape.circle,
                           image: DecorationImage(
                               image: AssetImage(activity[index]["image"]!),
                               fit: BoxFit.cover)),
@@ -450,36 +432,37 @@ String dropdownvalue = 'All';
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                      Text(
-                      activity[index]["texte1"]!,
-                      style: TextStyle(fontSize: largeurEcran*0.04,fontWeight: FontWeight.bold),
+                        Text(
+                          activity[index]["texte1"]!,
+                          style: TextStyle(
+                              fontSize: largeurEcran * 0.04,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          activity[index]["date1"]!,
+                          style: TextStyle(fontSize: 12, color: Colors.black87),
+                        ),
+                      ],
                     ),
-                    Text(
-                      activity[index]["date1"]!,
-                      style: TextStyle(fontSize: 12,color: Colors.black87),
-                    ),
-                    ],
-                    ),
-                    
                     Spacer(),
                     Column(
                       children: [
                         Text(activity[index]["montant"]!,
-                        style: TextStyle(fontSize: largeurEcran*0.04,fontWeight: FontWeight.bold,color: Colors.blue)),
+                            style: TextStyle(
+                                fontSize: largeurEcran * 0.04,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue)),
                         Text(
-                      activity[index]["heure"]!,
-                      style: TextStyle(fontSize: 12,color: Colors.black87),
-                    ),
+                          activity[index]["heure"]!,
+                          style: TextStyle(fontSize: 12, color: Colors.black87),
+                        ),
                       ],
                     )
-                    
                   ],
                 ),
               ),
             ),
-          
-        ]),
-      
-    ));
+          ]),
+        ));
   }
 }

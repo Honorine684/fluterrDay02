@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'package:pay/Home.dart';
-import 'package:pay/Login.dart';
-import 'package:pay/Wallet.dart';
+import 'package:pay/Pages/Home.dart';
+import 'package:pay/authentication/Login.dart';
+import 'package:pay/Pages/Wallet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -137,7 +137,7 @@ class _SnakeNavigationBarExampleScreenState
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: true,
-      extendBody: true,
+     // extendBody: true,
       body: pages[activeBottom],
       bottomNavigationBar: SnakeNavigationBar.color(
         behaviour: snakeBarStyle,

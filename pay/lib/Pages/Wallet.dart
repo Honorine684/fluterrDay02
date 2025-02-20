@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pay/flChart.dart';
-import 'package:u_credit_card/u_credit_card.dart';
+import 'package:pay/Component/cartCredit.dart';
+import 'package:pay/Component/flChart.dart';
+
 
 class Wallet extends StatefulWidget {
   const Wallet({super.key});
@@ -68,24 +69,13 @@ class WalletState extends State<Wallet> {
             ),
             Row(
               children: [
-                CreditCardUi(
-                  width: 300,
-                  cardHolderFullName: 'John Doe',
-                  cardNumber: '1234567812345678',
-                  validFrom: '01/23',
-                  validThru: '01/28',
-                  topLeftColor: Colors.blue,
-                  doesSupportNfc: true,
-                  placeNfcIconAtTheEnd: true,
-                  cardType: CardType.debit,
-                  cardProviderLogo: FlutterLogo(),
-                  cardProviderLogoPosition: CardProviderLogoPosition.right,
-                  showBalance: true,
-                  balance: 128.32434343,
-                  autoHideBalance: true,
-                  enableFlipping: true,
-                  cvvNumber: '123',
-                  ),
+                Column(
+                  children: [
+                Cartcredit(),
+                Cartcredit()
+                  ],
+                )
+               
               ],
             ),
             
@@ -103,41 +93,40 @@ class WalletState extends State<Wallet> {
                 ),
               ),
             const SizedBox(height: 10),
-            SizedBox(
-      height: 50,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,  // Permet le défilement horizontal
-        itemCount: periode.length,
-        itemBuilder: (context, index) =>   // Espace entre les éléments
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                indexSelectione = index;  // Met à jour l'index sélectionné
-              });
-            },
-            child: Container(
-             padding: const EdgeInsets.symmetric(horizontal: 15),
-             margin: EdgeInsets.only(right: 8),
-              width: largeurEcran*0.88,
-              height: 50,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black.withOpacity(0.1)),
-                borderRadius: BorderRadius.circular(5)
-              ),
-                child: Text(
-                  periode[index],
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: indexSelectione == index
-                        ? Colors.black  // Couleur du texte si sélectionné
-                        : Colors.blue.withOpacity(0.2),
-                  ),
-                ),
-              ),
-            ),
+      Container(
+  width: largeurEcran * 0.88,
+  height: 50,
+  padding: const EdgeInsets.symmetric(horizontal: 15),
+  decoration: BoxDecoration(
+    border: Border.all(color: Colors.black.withOpacity(0.1)),
+    borderRadius: BorderRadius.circular(5)
+  ),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Espace les éléments uniformément
+    children: List.generate(
+      periode.length,
+      (index) => GestureDetector(
+        onTap: () {
+          setState(() {
+            indexSelectione = index;
+          });
+        },
+        child: Text(
+          periode[index],
+          style: TextStyle(
+            fontSize: 12,
+            color: indexSelectione == index
+                ? Colors.blue  // Couleur du texte si sélectionné
+                : Colors.black.withOpacity(0.5),
+            fontWeight: indexSelectione == index 
+                ? FontWeight.bold 
+                : FontWeight.normal,
           ),
         ),
-      
+      ),
+    ),
+  ),
+),
     
 
              
@@ -235,7 +224,7 @@ class WalletState extends State<Wallet> {
               children: [
                 Container(
                   width: largeurEcran * 0.88,
-                  height: 100,
+                  height: 60,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                  
                   decoration: BoxDecoration(
@@ -265,7 +254,6 @@ class WalletState extends State<Wallet> {
                       ),
                       ElevatedButton.icon(
                       onPressed: () {},
-                      //icon: const Icon(Icons.send, color: Colors.black),
                       label: const Text(
                         "See details",
                         style: TextStyle(color: Colors.black),
@@ -275,7 +263,7 @@ class WalletState extends State<Wallet> {
                         elevation: 0,
                       ),
                     ),
-                   SizedBox(height: 50,)
+                    SizedBox(height: 80),
                     ],
                   ),
                 )
