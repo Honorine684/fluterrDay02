@@ -39,6 +39,7 @@ dependencies:
   path: ^1.9.0
   shared_preferences: ^2.5.2
   fl_chart: ^0.70.2
+  u_credit_card: ^1.4.0
   #chips_choice_null_safety: ^2.0.6
 
 dev_dependencies:

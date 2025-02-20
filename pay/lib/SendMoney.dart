@@ -11,6 +11,33 @@ class Sendmoney extends StatefulWidget {
   }
 }
 
+final List<Map<String,String>> card = [
+{
+  "image":"assets/images/avatar.png",
+  "texte":"ebl physical card"
+},
+{
+  "image":"assets/images/avatar.png",
+  "texte":"ebl physical card"
+},
+{
+  "image":"assets/images/avatar.png",
+  "texte":"ebl physical card"
+},
+{
+  "image":"assets/images/avatar.png",
+  "texte":"ebl physical card"
+},
+{
+  "image":"assets/images/avatar.png",
+  "texte":"ebl physical card"
+},
+{
+  "image":"assets/images/avatar.png",
+  "texte":"ebl physical card"
+},
+];
+
 class SendmoneyState extends State<Sendmoney> {
   bool voirRecherche = false;
   final searchController = TextEditingController();
@@ -19,24 +46,20 @@ class SendmoneyState extends State<Sendmoney> {
     searchController.dispose();
     super.dispose();
   }
+ int indexSelectione = 0;
 
-  int tag = 1;
-  List<String> tags = [];
-  List<String> options = [
-    "Physical abi card",
-    "Physical abi card",
-    "Physical abi card",
-  ];
+
   @override
   Widget build(BuildContext context) {
     final largeurEcran = MediaQuery.of(context).size.width;
     final hauteurEcran = MediaQuery.of(context).size.height;
-    bool? isChecked = false;
+    bool? isChecked = true;
     return Scaffold(
       //extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(129, 255, 255, 255),
-        elevation: 10,
+        backgroundColor: Colors.white,
+        toolbarHeight: 70,
+        automaticallyImplyLeading: false,
         title: AnimatedCrossFade(
             firstChild: Row(
               children: [
@@ -95,18 +118,16 @@ class SendmoneyState extends State<Sendmoney> {
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            SizedBox(
-              height: 20,
-              width: 20,
-            ),
+            SizedBox(height: 20,width: 20,),
             Center(
-              child: Divider(
-              indent: largeurEcran*0.3,
-              endIndent: largeurEcran*0.3,
-              height: 50,
-              thickness: 6,
-              color: Colors.black,
-            ),
+              child: Container(
+                width: 70,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
             ),
             Center(
                 child: Text(
@@ -121,35 +142,40 @@ class SendmoneyState extends State<Sendmoney> {
             Row(
               children: [
                 Text("Select card"),
-                /*Column(
-                  children: [
-                    ChipsChoice.single(
-                        value: tag,
-                        onChanged: (val) => setState(() {
-                              val = tag;
-                            }),
-                        choiceItems:
-                            C2Choice.listFrom(
-                              source: options,
-                              value: (i,v)=>i, 
-                              label: (i,v)=>v,
-                              disabled: (i,v)=> [0,2,5].contains(i)
-                              ),
-                        choiceActiveStyle: C2ChoiceStyle(
-                          color: Colors.blue,
-                          borderColor: Colors.blue,
-                          borderRadius: BorderRadius.circular(5)
-                          ),
-                          choiceStyle: C2ChoiceStyle(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(5)
-                            ),
-                        )
-                  ],
-                )*/
               ],
             ),
-            SizedBox(height: hauteurEcran*0.02,),
+            SizedBox(height:hauteurEcran*0.01,),
+            SizedBox(
+              height: 45,
+              width: largeurEcran*0.88,
+              child:
+              ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: card.length,
+              itemBuilder: (context, index) => 
+                GestureDetector(  
+                  onTap: () {
+                    setState(() {
+                    indexSelectione = index;  
+                    });
+                  },
+                child: Container(
+                  height: 40,
+                  width: 170,
+                  margin: EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    
+                    color:indexSelectione == index ? Colors.blue : Colors.grey.withOpacity(0.2),),
+                
+                    child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.asset(card[index]["image"]!, height: 15, width: 15,),
+                        SizedBox(height: 8,),
+                    Text(card[index]["texte"]!,style: TextStyle(fontSize: 13,color: indexSelectione == index ? Colors.white : Colors.black,),)],) ),), ) ),
+
+          SizedBox(height: hauteurEcran*0.02,),
             Row(
               children: [
                 Text("Choose recipient",style: TextStyle(fontSize: largeurEcran*0.05,fontWeight: FontWeight.bold),)
@@ -248,11 +274,13 @@ class SendmoneyState extends State<Sendmoney> {
                   color: Colors.blue
                 ),
                 child: TextButton(
-                  onPressed: () async {},
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
                   child: Text("Send money",style: TextStyle(fontSize: largeurEcran*0.055,color: Colors.white),),
                 ),
               ),
-              SizedBox(height: hauteurEcran*0.1,width: largeurEcran*0.1,)
+              SizedBox(height: hauteurEcran*0.1,width: largeurEcran*0.1,)  
           ],
         ),
       ),

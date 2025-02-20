@@ -4,6 +4,7 @@ import 'package:pay/SQLite/sqlite.dart';
 import 'package:pay/SendMoney.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -172,12 +173,35 @@ String dropdownvalue = 'All';
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+           /* Row(
+              children: [
+                CreditCardUi(
+                  width: 300,
+                  cardHolderFullName: 'John Doe',
+                  cardNumber: '1234567812345678',
+                  validFrom: '01/23',
+                  validThru: '01/28',
+                  topLeftColor: Colors.blue,
+                  doesSupportNfc: true,
+                  placeNfcIconAtTheEnd: true,
+                  cardType: CardType.debit,
+                  cardProviderLogo: FlutterLogo(),
+                  cardProviderLogoPosition: CardProviderLogoPosition.right,
+                  showBalance: true,
+                  balance: 128.32434343,
+                  autoHideBalance: true,
+                  enableFlipping: true,
+                  cvvNumber: '123',
+                  ),
+              ],
+            ),*/
             SizedBox(
               height: hauteurEcran * 0.02,
             ),
             Padding(
               padding: EdgeInsets.only(right: 10, left: 10),
-              child: Container(
+              child: 
+              Container(
                 // margin: EdgeInsets.only(right: 10,left: 10),
                 width: largeurEcran * 0.95,
                 height: hauteurEcran * 0.20,
@@ -307,14 +331,12 @@ String dropdownvalue = 'All';
                       Icons.send,
                       color: Colors.black,
                     ),
-                    onPressed: () => setState(() {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Sendmoney()));
+                   onPressed: () => setState(() {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const Sendmoney()));
                     }),
                   ),
                 ),
+         
                 Container(
                   margin: EdgeInsets.all(5),
                   width: largeurEcran * 0.28,
@@ -455,9 +477,9 @@ String dropdownvalue = 'All';
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          
+        ]),
+      
+    ));
   }
 }

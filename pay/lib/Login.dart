@@ -75,11 +75,14 @@ class _LoginState extends State<Login>{
                    controller: email,
                   
                   // pour verifier si le champ est bien rempli
-                  validator: (value){
-                    if(value!.isEmpty){
-                      return "Email est obligatoire";
-                    }
-                    return null;
+                  validator: (value) {
+                  if (value == null || value.isEmpty) {
+                  return "Email est obligatoire";
+                   }
+                  if (!value.contains('@')) {
+                    return "L'email doit contenir un @";
+                  }
+                  return null;
                   },
                   decoration: InputDecoration(
                     icon: Icon(Icons.email),

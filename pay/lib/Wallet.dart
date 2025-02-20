@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pay/flChart.dart';
+import 'package:u_credit_card/u_credit_card.dart';
 
 class Wallet extends StatefulWidget {
   const Wallet({super.key});
@@ -10,11 +11,19 @@ class Wallet extends StatefulWidget {
   }
 }
 
+final List<String> periode = [
+  "Day",
+  "Week",
+  "Month",
+  "Custom Range"
+];
+
 class WalletState extends State<Wallet> {
+  int indexSelectione = 0;
   @override
   Widget build(BuildContext context) {
     final largeurEcran = MediaQuery.of(context).size.width;
-    final hauteurEcran = MediaQuery.of(context).size.height;
+    //final hauteurEcran = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -59,23 +68,27 @@ class WalletState extends State<Wallet> {
             ),
             Row(
               children: [
-                Container(
-                  width: largeurEcran * 0.4,
-                  height: hauteurEcran * 0.25,
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(5)),
-                ),
-                Container(
-                  margin: EdgeInsets.all(16),
-                  width: largeurEcran * 0.4,
-                  height: hauteurEcran * 0.25,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(5)),
-                ),
+                CreditCardUi(
+                  width: 300,
+                  cardHolderFullName: 'John Doe',
+                  cardNumber: '1234567812345678',
+                  validFrom: '01/23',
+                  validThru: '01/28',
+                  topLeftColor: Colors.blue,
+                  doesSupportNfc: true,
+                  placeNfcIconAtTheEnd: true,
+                  cardType: CardType.debit,
+                  cardProviderLogo: FlutterLogo(),
+                  cardProviderLogoPosition: CardProviderLogoPosition.right,
+                  showBalance: true,
+                  balance: 128.32434343,
+                  autoHideBalance: true,
+                  enableFlipping: true,
+                  cvvNumber: '123',
+                  ),
               ],
             ),
+            
              const SizedBox(height: 20),
               
               // Total spending section
@@ -90,45 +103,45 @@ class WalletState extends State<Wallet> {
                 ),
               ),
             const SizedBox(height: 10),
-              
-              // Période selector avec GestureDetector
-              GestureDetector(
-                onTap: () {
-                  // Ajouter votre logique ici
-                },
-                child: Container(
-                  width: largeurEcran * 0.88,
-                  height: 50,
-                  
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Day",
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.black.withOpacity(0.2)),
-                      ),
-                      Text(
-                        "Week",
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.black.withOpacity(0.2)),
-                      ),
-                      Text(
-                        "Month",
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.black.withOpacity(0.2)),
-                      ),
-                      Text(
-                        "Custom Range",
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.black.withOpacity(0.2)),
-                      ),
-                    ],)
-              ),),
-            
+            SizedBox(
+      height: 50,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,  // Permet le défilement horizontal
+        itemCount: periode.length,
+        itemBuilder: (context, index) =>   // Espace entre les éléments
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                indexSelectione = index;  // Met à jour l'index sélectionné
+              });
+            },
+            child: Container(
+             padding: const EdgeInsets.symmetric(horizontal: 15),
+             margin: EdgeInsets.only(right: 8),
+              width: largeurEcran*0.88,
+              height: 50,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black.withOpacity(0.1)),
+                borderRadius: BorderRadius.circular(5)
+              ),
+                child: Text(
+                  periode[index],
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: indexSelectione == index
+                        ? Colors.black  // Couleur du texte si sélectionné
+                        : Colors.blue.withOpacity(0.2),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      
+    
+
+             
+            SizedBox(height: 10,),
                 // graphe
             Container(
               width: largeurEcran * 0.88,

@@ -3,7 +3,6 @@ import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:pay/Home.dart';
 import 'package:pay/Login.dart';
 import 'package:pay/Wallet.dart';
-import 'package:pay/appbarComponent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -89,14 +88,8 @@ class SnakeNavigationBarExampleScreen extends StatefulWidget {
 
 class _SnakeNavigationBarExampleScreenState
     extends State<SnakeNavigationBarExampleScreen> {
-  
-
   int activeBottom = 0;
-  final pages = [
-    Home(),
-    Wallet(),
-    Wallet()
-  ];
+  final pages = [Home(), Wallet(), Wallet()];
   final BorderRadius _borderRadius = const BorderRadius.only(
     topLeft: Radius.circular(25),
     topRight: Radius.circular(25),
@@ -108,13 +101,12 @@ class _SnakeNavigationBarExampleScreenState
   SnakeBarBehaviour snakeBarStyle = SnakeBarBehaviour.floating;
   EdgeInsets padding = const EdgeInsets.all(12);
 
- int _selectedItemPosition = 2;
   SnakeShape snakeShape = SnakeShape.circle;
 
-  bool showSelectedLabels = false;
-  bool showUnselectedLabels = false;
+  bool showSelectedLabels = true;
+  bool showUnselectedLabels = true;
 
-  Color selectedColor = Colors.black;
+  Color selectedColor = Colors.blue;
   Color unselectedColor = Colors.blueGrey;
 
   Gradient selectedGradient =
@@ -130,12 +122,8 @@ class _SnakeNavigationBarExampleScreenState
     const Color(0xFFF4E4CE),
   ];
 
-
-
   @override
   Widget build(BuildContext context) {
-    /*final largeurEcran = MediaQuery.of(context).size.width;
-    final hauteurEcran = MediaQuery.of(context).size.height;*/
     //deconnexion
     Future<void> logout() async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -146,42 +134,11 @@ class _SnakeNavigationBarExampleScreenState
       );
     }
 
-   
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: true,
       extendBody: true,
-     
-      body:pages[activeBottom],
-      /*AnimatedContainer(
-        color: containerColor ?? containerColors[0],
-        duration: const Duration(seconds: 1),
-        child: PageView(
-          onPageChanged: _onPageChanged,
-          children: <Widget>[
-            Home(),
-            Wallet(),
-            /*PagerPageWidget(
-              text: 'It comes in all shapes and sizes...',
-              description:
-                  'Change indicator and bottom bar shape at your will.',
-              image: Image.asset('images/flutter2.png'),
-            ),
-            PagerPageWidget(
-              text: '...not only the ones you see here',
-              description:
-                  'Combine different shapes for unique and personalized style!.',
-              image: Image.asset('images/flutter3.png'),
-            ),
-            PagerPageWidget(
-              text: 'And it\'s all open source!',
-              description:
-                  'Get the Flutter library on github.com/herodotdigital',
-              image: Image.asset('images/flutter4.png'),
-            ),*/
-          ],
-        ),
-      ),*/
+      body: pages[activeBottom],
       bottomNavigationBar: SnakeNavigationBar.color(
         behaviour: snakeBarStyle,
         snakeShape: snakeShape,
@@ -189,37 +146,27 @@ class _SnakeNavigationBarExampleScreenState
         padding: padding,
 
         ///configuration for SnakeNavigationBar.color
-        snakeViewColor: selectedColor,
-        selectedItemColor:
-            snakeShape == SnakeShape.indicator ? selectedColor : null,
+        snakeViewColor: selectedColor.withOpacity(0.2),
+        selectedItemColor: selectedColor,
         unselectedItemColor: unselectedColor,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
 
-        ///configuration for SnakeNavigationBar.gradient
-        // snakeViewGradient: selectedGradient,
-        // selectedItemGradient: snakeShape == SnakeShape.indicator ? selectedGradient : null,
-        // unselectedItemGradient: unselectedGradient,
-
-        showUnselectedLabels: showUnselectedLabels,
-        showSelectedLabels: showSelectedLabels,
-
-        currentIndex: _selectedItemPosition,
+        currentIndex: activeBottom,
         onTap: (index) {
           if (index == 3) {
             // Index de l'icône de déconnexion
             logout();
           } else {
-            setState(() => activeBottom = index);
+            activeBottom = index;
+            _onPageChanged(activeBottom);
           }
-
-          /*if(index==1){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> const Wallet()));
-          }*/
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.wallet), label: 'Wallet'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.wallet), label: 'Wallet'),
-          BottomNavigationBarItem(icon: Icon(Icons.gif_outlined), label: 'Cadeau'),
+              icon: Icon(Icons.gif_outlined), label: 'Cadeau'),
           BottomNavigationBarItem(
               icon: Icon(Icons.logout_sharp), label: 'deconnexion')
         ],
@@ -229,7 +176,7 @@ class _SnakeNavigationBarExampleScreenState
     );
   }
 
- void _onPageChanged(int activeBottom) {
+  void _onPageChanged(int activeBottom) {
     containerColor = containerColors[activeBottom];
     switch (activeBottom) {
       case 0:
@@ -350,4 +297,3 @@ class PagerPageWidget extends StatelessWidget {
     );
   }
 }
-
