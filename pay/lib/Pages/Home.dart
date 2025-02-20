@@ -93,6 +93,12 @@ class HomeState extends State<Home> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    chargerInfoUser(); // Charge les informations de l'utilisateur
+  }
+
   String dropdownvalue = 'All';
   var items = [
     'All',
@@ -130,7 +136,7 @@ class HomeState extends State<Home> {
                     height: 10,
                   ),
                   Text(
-                    "Hello,Sacof!",
+                    "Hello,${userData?.username ?? "Nom d'utilisateur"} ",
                     style: TextStyle(fontSize: largeurEcran * 0.04),
                   ),
                 ],
@@ -180,20 +186,18 @@ class HomeState extends State<Home> {
             Padding(
               padding: EdgeInsets.only(right: 10, left: 10),
               child: Container(
-                // margin: EdgeInsets.only(right: 10,left: 10),
                 width: largeurEcran * 0.95,
-                height: hauteurEcran * 0.20,
-
+                height: hauteurEcran * 0.23,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: Colors.blue,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey
-                          .withOpacity(0.2), //rend l'ombre semi transparente
-                      spreadRadius: 3, //expansion de l'omnbre
-                      blurRadius: 5, //controle le flou de l'ombre
-                      offset: Offset(0, 3), //decale l'ombre de 3pixels
+                          .withOpacity(0.2), // Ombre semi-transparente
+                      spreadRadius: 3, // Expansion de l'ombre
+                      blurRadius: 5, // Contrôle du flou de l'ombre
+                      offset: Offset(0, 3), // Décalage de l'ombre de 3 pixels
                     )
                   ],
                 ),
@@ -201,32 +205,30 @@ class HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          width: 10,
-                          height: 10,
+                        Padding(
+                          padding: EdgeInsets.all(10), // Remplace SizedBox
+                          child: Text(
+                            "${userData?.username ?? "Nom d'utilisateur"} account",
+                            style: TextStyle(
+                                fontSize: largeurEcran * 0.037,
+                                color: Colors.white),
+                          ),
                         ),
-                        Text(
-                          userData?.username ?? "account",
-                          style: TextStyle(
-                              fontSize: largeurEcran * 0.037,
-                              color: Colors.white),
+                        Spacer(), // Remplace la largeur fixe de SizedBox avec Spacer
+                        Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Text(
+                            "${userData?.email ?? "Email"} ",
+                            style: TextStyle(
+                                fontSize: largeurEcran * 0.037,
+                                color: Colors.white),
+                          ),
                         ),
-                        SizedBox(
-                          height: 10,
-                          width: 109,
-                        ),
-                        Text(
-                          userData?.username ?? "account",
-                          style: TextStyle(
-                              fontSize: largeurEcran * 0.037,
-                              color: Colors.white),
-                        )
                       ],
                     ),
                     Text(
-                      "${userData?.solde ?? '0.00'}",
+                      "${userData?.solde ?? "\$10000"}",
                       style: TextStyle(
                           fontSize: largeurEcran * 0.1,
                           fontWeight: FontWeight.bold,
@@ -239,28 +241,27 @@ class HomeState extends State<Home> {
                     ),
                     Row(
                       children: [
-                        SizedBox(
-                          height: 10,
-                          width: 10,
+                        Padding(
+                          padding: EdgeInsets.all(10), // Remplace SizedBox
+                          child: Text(
+                            "Added card:05",
+                            style: TextStyle(
+                                fontSize: largeurEcran * 0.035,
+                                color: Colors.white),
+                          ),
                         ),
-                        Text(
-                          userData?.username ?? "account",
-                          style: TextStyle(
-                              fontSize: largeurEcran * 0.035,
-                              color: Colors.white),
+                        Spacer(), // Remplace la largeur fixe de SizedBox avec Spacer
+                        Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Text(
+                            "Ac.no.${userData?.userId ?? "Ac.no.225847"}",
+                            style: TextStyle(
+                                fontSize: largeurEcran * 0.035,
+                                color: Colors.white),
+                          ),
                         ),
-                        SizedBox(
-                          height: 10,
-                          width: 130,
-                        ),
-                        Text(
-                          "Acn124587",
-                          style: TextStyle(
-                              fontSize: largeurEcran * 0.035,
-                              color: Colors.white),
-                        )
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),

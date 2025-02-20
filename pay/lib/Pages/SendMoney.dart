@@ -235,7 +235,7 @@ class SendmoneyState extends State<Sendmoney> {
             // mont cart
 
             Container(
-              height: hauteurEcran*0.28,
+              height: hauteurEcran*0.20,
               width: largeurEcran*0.85,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -244,10 +244,32 @@ class SendmoneyState extends State<Sendmoney> {
               child: Column(
                 children: [
                   Text("\$35",style: TextStyle(fontSize: largeurEcran*0.095),),
+                  Image.asset("assets/images/amount.png")
                 ],
               )
             ),
-            SizedBox(height: hauteurEcran*0.1,),
+            SizedBox(height: 15,),
+            // textFormField amount
+            TextField(
+              keyboardType: TextInputType.text,
+              
+              cursorColor: Color(0xFF075E54),
+              decoration: InputDecoration(
+                hintText: 'Entrer le montant à envoyer',
+                hintStyle: TextStyle(color: Colors.black.withOpacity(0.5),fontSize: 12),
+                suffixIcon: Icon(Icons.money_off),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(width: 0, style: BorderStyle.none),
+                  
+                ),
+                filled: true,
+                fillColor: Colors.white, 
+                contentPadding: EdgeInsets.all(8),
+              ),
+            
+            ),
+            SizedBox(height: 10,),
             Row(
               children: [
 

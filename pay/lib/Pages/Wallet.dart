@@ -24,7 +24,7 @@ class WalletState extends State<Wallet> {
   @override
   Widget build(BuildContext context) {
     final largeurEcran = MediaQuery.of(context).size.width;
-    //final hauteurEcran = MediaQuery.of(context).size.height;
+  
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -69,15 +69,11 @@ class WalletState extends State<Wallet> {
             ),
             Row(
               children: [
-                Column(
-                  children: [
-                Cartcredit(),
                 Cartcredit()
-                  ],
-                )
-               
               ],
             ),
+            
+          
             
              const SizedBox(height: 20),
               

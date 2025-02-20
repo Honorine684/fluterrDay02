@@ -26,15 +26,20 @@ class PayDb {
     return await db.insert("Users", user.toMap(),conflictAlgorithm: ConflictAlgorithm.replace,);
   }
   // methode de connexion
-  Future<Map<String, dynamic>?> login(Users user) async{
-    final Database db = await _database();
-    var result = await db.rawQuery(
-      "SELECT* FROM Users WHERE email = '${user.email}' AND userPassword = '${user.userPassword}'"
-    );
-    print(result.first);
-    return result.firstOrNull;
+  Future<Map<String, dynamic>?> login(Users user) async {
+  final Database db = await _database();
   
+  var result = await db.query(
+    'Users',
+    where: 'email = ? AND userPassword = ?',
+    whereArgs: [user.email, user.userPassword],
+  );
+  
+  if (result.isNotEmpty) {
+    return result.first;
   }
+  return null;
+}
 
   Future<List<Users>> user() async {
     // Get a reference to the database.
@@ -55,7 +60,7 @@ class PayDb {
   // recuperer l'user coonecter
   
 
-  Future<Users?> getUserConnected(userId) async{
+  Future<Users?> getUserConnected(int userId) async{
     final Database  db =  await _database();
     var result = await db.query("Users",
       where: 'userId = ?',
