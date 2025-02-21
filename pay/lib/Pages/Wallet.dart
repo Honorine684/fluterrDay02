@@ -68,10 +68,28 @@ class WalletState extends State<Wallet> {
               height: 5,
             ),
             Row(
-              children: [
-                Cartcredit()
-              ],
-            ),
+            children: [
+              Container(
+                width: 150,
+                child: Column(
+                  children: [
+                    Cartcredit()
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Container(
+                width: 150,
+                child: Column(
+                  children: [
+                    Image.asset("assets/images/wallet.png")
+                  ],
+                ),
+              )
+            ],
+          ),
             
           
             
