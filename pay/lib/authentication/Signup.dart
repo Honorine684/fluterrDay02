@@ -15,12 +15,64 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup>{
+
   //controller de texte
   final username = TextEditingController();
   final email = TextEditingController();
   final passWord = TextEditingController();
   final confirmPassword = TextEditingController();
   bool showPassword = false;
+  // verification email 
+  String? validateEmail(String? value) {
+  const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
+      r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
+      r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
+      r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
+      r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
+      r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
+      r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
+  final regex = RegExp(pattern);
+  if(value!.isNotEmpty && !regex.hasMatch(value)){
+    return "Entrez un email valide";
+  }else{
+    return null;
+  }
+}
+    // utilisation de l'inscription user
+ 
+  signup()async{
+    final db = PayDb();
+    try{
+     bool emailExits = await db.isEmailExists(email.text) ;
+     if(emailExits){
+      ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Cet email est déja utilisé"),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(10),
+        action: SnackBarAction(
+        label: "Rééssayer",
+        onPressed: () => email.clear(),
+        ),
+        )
+      );
+      return;
+     }
+     // logique de l'inscription 
+     db.createUser(Users(username: username.text,email: email.text,userPassword: passWord.text))
+     .whenComplete((){Navigator.push(context,MaterialPageRoute(builder: (context) =>const Login()));});
+                                  
+  }catch(e){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Erreur lors de l'inscription"),
+        backgroundColor: Colors.red,
+        ));
+  }
+  }
+  
   // nous devons creer une cle global pour notre form
   final formKey = GlobalKey<FormState>();
   @override
@@ -76,15 +128,7 @@ class _SignupState extends State<Signup>{
                 child: TextFormField(
                    controller: email,
                   // pour verifier si le champ est bien rempli
-                  validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Email est obligatoire";
-                  }
-                  if (!value.contains('@')) {
-                    return "L'email doit contenir un @";
-                  }
-                  return null;
-                },
+                  validator: validateEmail,
                   decoration: InputDecoration(
                     icon: Icon(Icons.email),
                     border: InputBorder.none,
@@ -107,8 +151,14 @@ class _SignupState extends State<Signup>{
                   validator: (value){
                     if(value!.isEmpty){
                       return "Mot de passe obligatoire";
-                    }else if((passWord.text).length < 4){
-                      return "Le mot de passe doit contenir plus de 4 caractères";
+                    }else if((passWord.text).length < 6){
+                      return "Le mot de passe doit contenir plus de 6 caractères";
+                    }else if(!RegExp(r'[a-zA-Z]').hasMatch(passWord.text)){
+                      return "Le mot de passe doit contenir des lettres";
+                    }else if(!RegExp(r'\d').hasMatch(passWord.text)){
+                      return "Le mot de passe doit contenir des nombres";
+                    }else if((passWord.text).contains(' ')){
+                      return "Le mot de passe ne peut contenir d'espace";
                     }
                     return null;
                   },
@@ -176,20 +226,7 @@ class _SignupState extends State<Signup>{
                   onPressed: () => setState(() {
                     if(formKey.currentState!.validate()){
                       //methode d'inscription
-                      final db = PayDb();
-                            
-                               db.createUser(Users(
-                                    username: username.text,
-                                    email: email.text,
-                                    userPassword: passWord.text))
-                                .whenComplete(() {
-                             
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const Login()));
-                            });
+                      signup();            
                   }
                   },),
                   child: Text("S'inscrire",style: TextStyle(fontSize: largeurEcran*0.04,color: Colors.white),),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pay/Component/Navbar.dart';
 import 'package:pay/JsonModels/User.dart';
 import 'package:pay/SQLite/sqlite.dart';
 import 'package:pay/authentication/Signup.dart';
-import 'package:pay/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -20,7 +20,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login>{
   
   final db = PayDb();
-  bool isLogin = false;
+  bool hasLoginError = false;
   //controller de texte
   final email = TextEditingController();
   final passWord = TextEditingController();
@@ -40,7 +40,7 @@ class _LoginState extends State<Login>{
     }else{
       print("Échec de la connexion");
       setState(() {
-        isLogin = true;
+        hasLoginError = true;
       });
     }
   }
@@ -160,7 +160,7 @@ class _LoginState extends State<Login>{
                   )
                 ],
               ),
-              isLogin ? Text("Email ou mot de passe incorrecte",style:
+              hasLoginError ? Text("Email ou mot de passe incorrecte",style:
               TextStyle(color: Colors.red) 
               ,): const SizedBox(),
               

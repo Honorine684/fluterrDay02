@@ -1,7 +1,7 @@
 
 import 'package:path/path.dart';
-import 'package:pay/JsonModels/Contact.dart';
 import 'package:pay/JsonModels/User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -10,7 +10,7 @@ import 'package:sqflite/sqflite.dart';
 class PayDb {
   final databaseName = 'payDb';
   String users = "CREATE TABLE Users(userId INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT UNIQUE,email TEXT UNIQUE,userPassword TEXT)";
-  String contacts = "CREATE TABLE contacts (contactId INTEGER PRIMARY KEY AUTOINCREMENT,userId INTEGER,contactEmail VARCHAR NOT NULL,contactName VARCHAR,avatar VARCHAR,FOREIGN KEY (userId) REFERENCES users (userId))";
+  
   
                
   
@@ -22,11 +22,11 @@ class PayDb {
     // Création de la table Users
     await db.execute(users);
     
-    // Création de la table Contacts
-    await db.execute(contacts);
+    
+    
   });
 }
-
+  // methode d'inscription
   Future<int> createUser(Users user) async{
     final db = await _database();
     return await db.insert("Users", user.toMap(),conflictAlgorithm: ConflictAlgorithm.replace,);
@@ -46,8 +46,20 @@ class PayDb {
   }
   return null;
 }
+// methode controler si email existe
+Future<bool> isEmailExists(String email)async{
+  final Database db = await _database();
+  var result = await db.query("Users",where: "email = ?",whereArgs: [email]);
+  return result.isNotEmpty;
+}
 
-  Future<List<Users>> user() async {
+    //deconnexion
+Future<void> logout() async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('userId'); // nettoyer l'user
+      
+}
+  Future<List<Users>> listUser() async {
     // Get a reference to the database.
     final Database db = await _database();
 
@@ -77,28 +89,9 @@ class PayDb {
     }
     return null; 
   }
-
-// ajouter contact pour un utilisateur donner
-
-Future<int> createContact(Contact contact) async{
-    final db = await _database();
-    return await db.insert("Contact", contact.toMap(),conflictAlgorithm: ConflictAlgorithm.replace,);
-  }
 }
 
-/*void addContact() async {
-  int userId = 1; // L'ID de l'utilisateur auquel ce contact appartient
-  
-  // Crée un contact pour cet utilisateur
-  Contact newContact = Contact(
-    userId: userId, // Lier le contact à cet utilisateur
-    contactName: 'John Doe',
-    contactEmail: 'contact@exemple.com',
-    avatar: 'https://exemple.com/avatar.png',
-  );
 
-  int result = await PayDb().createContact(newContact);
-  print('Contact ajouté avec succès, ID : $result');
-}*/
+
 
 

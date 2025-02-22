@@ -74,6 +74,7 @@ final List<Map<String, String>> activity = [
 
 class HomeState extends State<Home> {
   Users? userData;
+  
   Future<Users?> getInfoUserConnecter() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? userId = prefs.getInt('userId');
@@ -228,7 +229,7 @@ class HomeState extends State<Home> {
                       ],
                     ),
                     Text(
-                      "${userData?.solde ?? "\$10000"}",
+                      "\$${userData?.solde ?? "\$10000"}",
                       style: TextStyle(
                           fontSize: largeurEcran * 0.1,
                           fontWeight: FontWeight.bold,
