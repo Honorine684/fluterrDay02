@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pay/Component/cartCredit.dart';
 import 'package:pay/Component/flChart.dart';
 import 'package:pay/SQLite/sqlite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:u_credit_card/u_credit_card.dart';
 
 class Wallet extends StatefulWidget {
   const Wallet({super.key});
@@ -17,21 +17,29 @@ final List<String> periode = ["Day", "Week", "Month", "Custom Range"];
 
 class WalletState extends State<Wallet> {
   final db = PayDb();
-  List userLoginCard = [
+  int? id;
+  List<Map<String, dynamic>> userLoginCard = [
     {
-      Cartcredit()
-    }
+      "numCard": "1234567812345678",
+      "cvvNumber": "250",
+      "dateExpiration": "26/07/27"
+    },
   ];
 
   Future<void> _loadUserCards() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var user = prefs.getInt("userId");
-    print("id $user");
-    final cards = await db.getUserCards(user!);
+    final idUser = prefs.getInt("userId");
+    if (idUser == null) {
+      print("Erreur : l'ID utilisateur est null");
+      return;
+    }
+    final cards = await db.getUserCards(idUser);
     setState(() {
+      id = idUser;
       userLoginCard.addAll(cards);
-      print(cards.length);
     });
+
+    print("Cartes $cards");
   }
 
 // boite de dialogue pour poser question a l'user
@@ -48,20 +56,15 @@ class WalletState extends State<Wallet> {
             TextButton(
               child: Text('Non'),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(dialogueContext);
               },
             ),
             TextButton(
               child: Text('Oui'),
-              
               onPressed: () async {
-               
-                Navigator.pop(context);
+                Navigator.pop(dialogueContext);
                 try {
-                  final newCard = await db.cardForUser(user!);
-                  setState(() {
-                    userLoginCard.add(newCard);
-                  });
+                  await db.cardForUser(user!);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text('Carte créée avec succès !'),
                     backgroundColor: Colors.green,
@@ -93,7 +96,9 @@ class WalletState extends State<Wallet> {
     final largeurEcran = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+        ),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(children: [
@@ -134,61 +139,38 @@ class WalletState extends State<Wallet> {
             ),
             // Affichage des cartes en horizontal scroll
             Container(
-              height: 150,
+              height: 250,
+              width: largeurEcran * 0.90,
               child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: userLoginCard.length + 1, // +1 pour la carte fixe
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    // Première carte fixe
+                  scrollDirection: Axis.horizontal,
+                  itemCount: userLoginCard.length, // +1 pour la carte fixe
+                  itemBuilder: (context, index) {
                     return Container(
                       width: 150,
                       margin: EdgeInsets.only(right: 15),
-                      child: Cartcredit(),
-                    );
-                  } else {
-                    //print("voici la carte $index ")
-                    // Cartes virtuelles de l'utilisateur
-                    final card = userLoginCard[index];
-                    return Container(
-                      width: 150,
-                      margin: EdgeInsets.only(right: 15),
-                      child: Card(
-                        color: Colors.blue,
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Carte virtuelle',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 20),
-                              Text(
-                                card[index]["numCard"],
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14),
-                              ),
-                              Spacer(),
-                              Text(
-                                'Expire: ${card[index]['dateExpiration']}',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
+                      child: CreditCardUi(
+                        width: 400,
+                        cardHolderFullName: 'John Doe',
+                        cardNumber: "${userLoginCard[index]['numCard']}",
+                        validFrom: '01/28',
+                        validThru: "${userLoginCard[index]['dateExpiration']}",
+                        topLeftColor: Colors.blue,
+                        doesSupportNfc: true,
+                        placeNfcIconAtTheEnd: true,
+                        cardType: CardType.debit,
+                        cardProviderLogo: FlutterLogo(),
+                        cardProviderLogoPosition:
+                            CardProviderLogoPosition.right,
+                        showBalance: true,
+                        balance: 128.32434343,
+                        autoHideBalance: true,
+                        enableFlipping: false,
+                        cvvNumber: '123',
                       ),
                     );
-                  }
-                },
-              ),
+                  }),
             ),
-            
+
             const SizedBox(height: 20),
 
             // Total spending section
