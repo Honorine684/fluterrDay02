@@ -143,10 +143,10 @@ class WalletState extends State<Wallet> {
               width: largeurEcran * 0.90,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: userLoginCard.length, // +1 pour la carte fixe
+                  itemCount: userLoginCard.length, 
                   itemBuilder: (context, index) {
                     return Container(
-                      width: 150,
+                      width: 300,
                       margin: EdgeInsets.only(right: 15),
                       child: CreditCardUi(
                         width: 400,

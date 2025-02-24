@@ -6,13 +6,14 @@ class Users {
     final String? username;
     final String email;
     final String userPassword;
-    final List<String> contacts = [];
+    final String? userAsset;
     final double solde = 1000;
     
    
     Users({
         this.userId,
         this.username = "",
+        this.userAsset = "assets/images/avatar.png",
         required this.email,
         required this.userPassword,
         

@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class PayDb {
   final databaseName = 'payDb';
   String users =
-      "CREATE TABLE Users(userId INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT UNIQUE,email TEXT UNIQUE,userPassword TEXT)";
+      "CREATE TABLE Users(userId INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT UNIQUE,email TEXT UNIQUE,userPassword TEXT,userAsset TEXT)";
   String cartevirtuelle =
       "CREATE TABLE CarteVirtuelle(cardId INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER,numCard VARCHAR NOT NULL,cvvNumber VARCHAR NOT NULL,dateExpiration VARCHAR NOT NULL,FOREIGN KEY(userId) REFERENCES USERS(userId))";
 
@@ -120,4 +120,15 @@ class PayDb {
     print("Voici les cartes  : $cartes");
     return cartes;
   }
+
+  // obtenir les autres utilisateurs 
+  Future<List<Map<String, dynamic>>> getOtherUsers(int currentUserId) async {
+  final Database db = await _database();
+  return await db.query(
+    'Users',
+    where: 'userId != ?',
+    whereArgs: [currentUserId],
+    columns: ['userId', 'username', 'email', 'userAsset']
+  );
+}
 }
